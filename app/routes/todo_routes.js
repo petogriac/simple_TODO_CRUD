@@ -2,7 +2,10 @@ module.exports = function(app, db) {
     var ObjectID = require('mongodb').ObjectID;
     // Creating a todo
     app.post('/todos', (req, res) => {
-        const todo = { todo: req.body.todo};
+        const todo = {
+            todo: req.body.todo,
+            done: false,
+        };
         db.collection('todos').insert(todo, (err, result) => {
             if(err) {
                 res.send({'error': 'An error has occurred'});
@@ -25,7 +28,7 @@ module.exports = function(app, db) {
     app.delete('/todos/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        db.collection('todos').remove(details, (err, item) => {
+        db.collection('todos').remove(details, (err) => {
           if (err) {
             res.send({'error':'An error has occurred'});
           } else {
@@ -37,12 +40,23 @@ module.exports = function(app, db) {
       app.put('/todos/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        const todo = { todo: req.body.todo};
-        db.collection('todos').update(details, todo, (err, result) => {
+        let updatedValue = {};
+
+        if(req.body.todo) {
+            updatedValue = {
+                todo: req.body.todo,
+            };
+        }
+        if(req.body.done){
+            updatedValue = {
+                done: req.body.done,
+            }
+        }
+        db.collection('todos').update(details, { $set: updatedValue}, (err, result) => {
           if (err) {
               res.send({'error':'An error has occurred'});
           } else {
-              res.send(todo);
+              res.send(result);
           }
         });
       });
