@@ -2,6 +2,7 @@ module.exports = function(app, db) {
     var ObjectID = require('mongodb').ObjectID;
     // Creating a todo
     app.post('/todos', (req, res) => {
+        console.log("TODO" + req.body)
         const todo = {
             todo: req.body.todo,
             done: false,
