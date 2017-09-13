@@ -8,14 +8,11 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-
-var db;
-
 MongoClient.connect(dbConfig.url, (err, database) => {
-  if (err) return console.log(err)
+  if (err) return console.log(err);
   require('./app/routes')(app, database);
   app.set('port', (process.env.PORT || 3000));
   app.listen(app.get('port'), () => {
     console.log('listening on 3000')
   })
-})
+});
