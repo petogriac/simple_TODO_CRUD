@@ -1,7 +1,13 @@
 module.exports = function(app, db) {
     var ObjectID = require('mongodb').ObjectID;
+
+    app.use(function(req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      next();
+    });
     // Creating a todo
-    app.post('/todos', (req, res) => {
+    app.post('/todos', (req, res, next) => {
         console.log("TODO" + req.body.todo)
         const todo = {
             todo: req.body.todo,
@@ -16,7 +22,7 @@ module.exports = function(app, db) {
         });
     });
     // Listing all todos
-    app.get('/todos', (req, res) => {
+    app.get('/todos', (req, res, next) => {
         db.collection('todos').find().toArray(function(err, results) {
           if (err) {
             res.send({'error':'An error has occurred'});
@@ -26,7 +32,7 @@ module.exports = function(app, db) {
         });
     });
     // Deleting a todo
-    app.delete('/todos/:id', (req, res) => {
+    app.delete('/todos/:id', (req, res, next) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
         db.collection('todos').remove(details, (err) => {
@@ -38,7 +44,7 @@ module.exports = function(app, db) {
         });
      });
      // Updating a todo
-      app.put('/todos/:id', (req, res) => {
+      app.put('/todos/:id', (req, res, next) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
         let updatedValue = {};
