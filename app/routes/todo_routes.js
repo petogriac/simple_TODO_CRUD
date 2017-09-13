@@ -55,7 +55,7 @@ module.exports = function(app, db) {
                 todo: req.body.todo,
             };
         }
-        if(req.body.done){
+        else{
             updatedValue = {
                 done: req.body.done,
             }
