@@ -9,7 +9,6 @@ module.exports = function(app, db) {
     });
     // Creating a todo
     app.post('/todos', (req, res, next) => {
-        console.log("TODO" + req.body.todo)
         const todo = {
             todo: req.body.todo,
             done: false,
